@@ -1,0 +1,9 @@
+.myModal {
+    width: 17% !important;
+    left: 80rem !important;
+    top: 2.813rem !important;
+}
+
+.search-btn:hover {
+    cursor: pointer;
+}

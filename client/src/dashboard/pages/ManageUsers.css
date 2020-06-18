@@ -1,0 +1,8 @@
+.btn-bootstrap {
+    background-color: #009C95 !important;
+    width: 70px !important;
+}
+
+.img-zoom:hover {
+    cursor: pointer;
+}
