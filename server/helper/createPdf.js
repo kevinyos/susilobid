@@ -6,7 +6,6 @@ const path = require('path');
 const compile = async (templateName, data) => {
   // merubah handlebars ke html
   const filePath = path.join(process.cwd(), 'templates', `${templateName}/html.hbs`);
-  console.log(filePath, 'ini dari compile');
   const html = await fs.readFile(filePath, 'utf-8');
 
   return handlebars.compile(html)(data);

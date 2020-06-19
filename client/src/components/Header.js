@@ -44,7 +44,7 @@ const Header = () => {
     } 
     setSearch('');
   };
-  console.log(search);
+  
   const { isLogged, uName, modalShow } = gState;
 
   return (

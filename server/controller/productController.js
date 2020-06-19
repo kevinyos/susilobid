@@ -4,10 +4,7 @@ module.exports = {
   fetchProduct: async (req, res) => {
     let { limit, offset, orderBy } = req.params;
     let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' AND bid_status = 1 ORDER BY submission_time ${orderBy}`;
-    let sql = `
-    SELECT * FROM product WHERE status = 'Confirm' AND bid_status = 1
-    ORDER BY submission_time ${orderBy}
-    LIMIT ${limit} OFFSET ${offset}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' AND bid_status = 1 ORDER BY submission_time ${orderBy} LIMIT ${limit} OFFSET ${offset}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);
@@ -29,6 +26,7 @@ module.exports = {
         u.username AS seller,
         p.starting_price,
         p.product_desc,
+        p.due_date,
         c.category as category,
         p.due_date
       FROM product p
@@ -80,8 +78,8 @@ module.exports = {
   },
   fetchMinPrice: async (req, res) => {
     let { minPrice } = req.params;
-    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE starting_price >= ${minPrice}`;
-    let sql = `SELECT * FROM product WHERE starting_price >= ${minPrice}`;
+    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price >= ${minPrice}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price >= ${minPrice}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);
@@ -96,8 +94,8 @@ module.exports = {
   },
   fetchMaxPrice: async (req, res) => {
     let { maxPrice } = req.params;
-    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE starting_price <= ${maxPrice}`;
-    let sql = `SELECT * FROM product WHERE starting_price <= ${maxPrice}`;
+    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price <= ${maxPrice}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price <= ${maxPrice}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);
@@ -112,8 +110,8 @@ module.exports = {
   },
   fetchDataByRangePrice: async (req, res) => {
     let {minPrice, maxPrice} = req.params;
-    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE starting_price >= ${minPrice} && starting_price <= ${maxPrice}`;
-    let sql = `SELECT * FROM product WHERE starting_price >= ${minPrice} && starting_price <= ${maxPrice}`;
+    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price >= ${minPrice} && starting_price <= ${maxPrice}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' && bid_status = 1 && starting_price >= ${minPrice} && starting_price <= ${maxPrice}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);
@@ -245,8 +243,8 @@ module.exports = {
   },
   fetchDataByTime: async (req, res) => {
     let { orderBy } = req.params;
-    let countSql = `SELECT COUNT(*) AS numRows FROM product ORDER BY submission_time ${orderBy}`;
-    let sql = `SELECT * FROM product ORDER BY submission_time ${orderBy}`;
+    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' && bid_status = 1 ORDER BY submission_time ${orderBy}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' && bid_status = 1 ORDER BY submission_time ${orderBy}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);
@@ -261,8 +259,8 @@ module.exports = {
   },
   fetchDataByPrice: async (req, res) => {
     let { orderBy } = req.params;
-    let countSql = `SELECT COUNT(*) AS numRows FROM product ORDER BY starting_price ${orderBy}`;
-    let sql = `SELECT * FROM product ORDER BY starting_price ${orderBy}`;
+    let countSql = `SELECT COUNT(*) AS numRows FROM product WHERE status = 'Confirm' && bid_status = 1 ORDER BY starting_price ${orderBy}`;
+    let sql = `SELECT * FROM product WHERE status = 'Confirm' && bid_status = 1 ORDER BY starting_price ${orderBy}`;
     try {
       let response = await dba(sql);
       let count = await dba(countSql);

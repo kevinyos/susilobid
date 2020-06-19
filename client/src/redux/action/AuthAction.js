@@ -53,7 +53,6 @@ export const Login = (username, password) => {
         // console.log(res.data.status)
         let { user_id, username, email, address, phone, role_id, token, verification_id, status } = res.data.data;
         // console.log(typeof(res.data))
-        console.log(res.data.data)
         dispatch({
           type: LOGIN,
           payload: {
@@ -76,13 +75,14 @@ export const Login = (username, password) => {
         });
       })
       .catch(err => {
+        console.log(err);
         dispatch({
           type: LOGIN_FAILED,
-          payload: err.message
+          payload: err.response.data.message
         });
         dispatch({
           type: API_AUTH_FAILED,
-          payload: err.message
+          payload: err.response.data.message
         });
       });
   };

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
-const ProductPagination = ({ productPerPage, totalProducts, paginate }) => {
+const ActiveAuctPagination = ({ AuctPerPage, totalAuct, paginate }) => {
 
   const pageNumbers = [];
 
-  for (let i = 1; i <= Math.ceil(totalProducts / productPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(totalAuct / AuctPerPage); i++) {
     pageNumbers.push(i);
   };
 
@@ -26,4 +26,4 @@ const ProductPagination = ({ productPerPage, totalProducts, paginate }) => {
   );
 };
 
-export default ProductPagination;
+export default ActiveAuctPagination;

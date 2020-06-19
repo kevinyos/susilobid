@@ -1,10 +1,9 @@
 const moment = require('moment');
-const path = require('path');
 const schedule = require('node-schedule');
 const { dba } = require('../database');
 const { userJoin } = require('../utils/users');
 const { transportAwait } = require('../helper/nodemailer');
-const { htmlToPdf, compile } = require('../helper/createPdf');
+const { htmlToPdf } = require('../helper/createPdf');
 
 // compile('pdf', {username: 'arioamri', email: 'arioamri@gmail.com'})
 // .then(res => console.log(res))
@@ -119,6 +118,8 @@ module.exports = {
             u.email AS 'buyerEmail',
             u.phone AS 'buyerPhone',
             b.offer,
+            b.bidder_id,
+            b.bid_id,
             c.category,
             p.product_desc,
             p.product_name,
@@ -132,6 +133,7 @@ module.exports = {
         let sellerSql = `
           SELECT 
             u.username AS 'seller',
+            p.seller_id,
             u.email AS 'sellerEmail',
             u.address,
             u.phone AS 'sellerPhone'
@@ -146,8 +148,8 @@ module.exports = {
 
           let buyerDetail = await dba(BuyerSql);
           let sellerDetail = await dba(sellerSql);
-          let { buyer, buyerEmail, buyerPhone, offer, category, product_desc, product_name, due_date } = buyerDetail[0];
-          let { seller, sellerEmail, address, sellerPhone } = sellerDetail[0];
+          let { buyer, buyerEmail, buyerPhone, offer, category, product_desc, product_name, due_date, bid_id, bidder_id } = buyerDetail[0];
+          let { seller, sellerEmail, address, sellerPhone, seller_id } = sellerDetail[0];
           const invNum = 'INV-' + Math.floor(Math.random() * 1000) + Date.now();
 
           let pdf = await htmlToPdf({
@@ -164,31 +166,74 @@ module.exports = {
             productDesc: product_desc,
             productCategory: category
           });
+          // console.log(pdf.sqlLink);
+
+          // send email buyer
+          let mailOptionBuyer = {
+            from: 'Admin <arioamri@gmail.com>',
+            to: buyerEmail,
+            subject: 'Invoice',
+            html: `
+            <p>Hi, ${buyer},</p>
+            <p>SELAMAT, kamu pemenang dari lelang produk ${product_name}</p>
+            <p>Product detail: ${product_desc}</p>`,
+            attachments : [
+              {
+                fileName: pdf.sqlLink.split('/invoice/'), 
+                path: `./public${pdf.sqlLink}`,
+                contentType: 'application/pdf'
+              }
+            ]
+          };
+
+          // send email seller
+          let mailOptionSeller ={
+            from: 'Admin <arioamri@gmail.com>',
+            to: sellerEmail,
+            subject: 'Invoice',
+            html: `
+            <p>Hi, ${seller}</p>
+            <p>SELAMAT, produk lelang kamu ${product_name} telah terjual</p>
+            <p>Product detail: ${product_desc}</p>`,
+            attachments : [
+              {
+                fileName: pdf.sqlLink.split('/invoice/'), 
+                path: `./public${pdf.sqlLink}`,
+                contentType: 'application/pdf'
+              }
+            ]
+          };
+
+          await transportAwait(mailOptionBuyer);
+          await transportAwait(mailOptionSeller);
+
+          // insert into bid result table
+          let totalCount = `SELECT SUM(count) AS totalCount FROM bid WHERE product_ID = ${get[i].product_id}`;
+          let countBid = await dba(totalCount);
+
+          let insertBidResult = `
+            INSERT INTO bid_result (bid_id, total_count_bidding, highest_bid, winner_id, seller_id) VALUES (${bid_id}, ${countBid[0].totalCount}, ${offer}, ${bidder_id}, ${seller_id})`;
+          await dba(insertBidResult);
+
+          // insert into transaction table
+          let getBidResId = `SELECT br.id AS 'bidResultId'
+            FROM bid_result br
+            JOIN bid b ON b.bid_id = b.bid_id
+            JOIN product p ON p.product_id = b.product_id
+            WHERE p.product_id = ${get[i].product_id}`;
+
+          let bidResId = await dba(getBidResId);
+          let insertTrx = `
+            INSERT INTO transaction (buyer_id, seller_id, date_of_trx, payment_to_seller, payment_to_admin, bid_result_id, status_trx) VALUES (${bidder_id}, ${seller_id}, '${moment(due_date).format("YYYY-MM-DD HH:mm:ss")}', ${offer - (offer * 0.05)}, ${offer * 0.05}, ${bidResId[0].bidResultId}, 'Close')`;
           
-          console.log(pdf.num);
-          console.log(pdf.sqlLink);
-
-          // let postSql = `INSERT INTO invoice (invoice_number, invoice_total, invoice_date, image_path) VALUES ()`;
-
-          // send email
-          // let mailOptionBuyer = {
-          //   from: 'Admin <arioamri@gmail.com>',
-          //   to: buyerEmail,
-          //   subject: "Invoice",
-          //   html: `
-          //   <p>Hi, ${buyer},</p>
-          //   <p>SELAMAT, kamu pemenang dari lelang produk ${product_name}</p>
-          //   <p>Product detail: ${product_desc}</p>`,
-          //   attachments : [
-          //     {
-          //       fileName: , 
-          //       path: ,
-          //       contentType: 'application/pdf'
-          //     }
-          //   ]
-          // };
+          let trxSql = await dba(insertTrx);
+          let insertInvoice = `
+            INSERT INTO invoice (invoice_number, invoice_total, invoice_date, trx_id, invoice_pdf) VALUES ('${invNum}', ${offer}, '${moment(due_date).format("YYYY-MM-DD HH:mm:ss")}', ${trxSql.insertId}, '${pdf.sqlLink}')`;
+            
+          await dba(insertInvoice); 
         });
-      }
+      };
+
       return res.status(200).send({
         status: 'Success',
         message: 'OK'

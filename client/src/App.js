@@ -1,8 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-// import Axios from 'axios';
-// import { API_URL } from './support/API_URL';
+// API
+import Axios from 'axios';
+import { API_URL } from './support/API_URL';
+
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import { keepLogin, checkStatus, Logout } from './redux/action';
@@ -27,6 +29,12 @@ const App = () => {
   const role = useSelector(({ auth }) => auth.role_id);
   const id = useSelector(({ auth }) => auth.user_id);
   const status = useSelector(({ status }) => status.status);
+
+  useEffect(() => {
+    Axios.get(`${API_URL}/bidding/schedule`)
+    .then(res => console.log(res.data.message))
+    .catch(err => console.log(err));
+  }, []);
 
   useEffect(() => {
     dispatch(keepLogin());

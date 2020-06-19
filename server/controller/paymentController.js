@@ -40,6 +40,7 @@ module.exports = {
         t.status_trx
       FROM transaction t
       JOIN users u ON t.buyer_id = u.user_id
+      WHERE t.status_trx != 'Close'
       ORDER BY date_of_trx ${orderBy}
       LIMIT ${limit} OFFSET ${offset}`;
     try {

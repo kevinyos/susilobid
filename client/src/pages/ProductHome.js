@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
 // API
-import Axios from 'axios';
-import { API_URL } from '../support/API_URL';
+// import Axios from 'axios';
+// import { API_URL } from '../support/API_URL';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,11 +36,11 @@ const ProductHome = () => {
   const offset = productPerPage * (currentPage - 1);
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  useEffect(() => {
-    Axios.get(`${API_URL}/bidding/schedule`)
-    .then(res => console.log(res.data.message))
-    .catch(err => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   Axios.get(`${API_URL}/bidding/schedule`)
+  //   .then(res => console.log(res.data.message))
+  //   .catch(err => console.log(err));
+  // }, []);
 
   useEffect(() => {
     dispatch(FetchProduct(productPerPage, offset, 'DESC'));
@@ -55,7 +55,7 @@ const ProductHome = () => {
               <Card.Img variant="top" src={SampleImage} style={{ height: "12rem" }} />
               <Card.Body>
                 <Card.Text>
-                  {`${val.product_desc.substring(0, MAX_LENGTH).toUpperCase()}...`}
+                  {`${val.product_desc ? val.product_desc.substring(0, MAX_LENGTH).toUpperCase(): null}...`}
                 </Card.Text>
                 <Card.Title className="text-center" style={{ color: "#009C95" }}>Rp {val.starting_price.toLocaleString()}</Card.Title>
               </Card.Body>
