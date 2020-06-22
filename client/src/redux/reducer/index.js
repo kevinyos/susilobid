@@ -9,6 +9,7 @@ import { fetchProduct } from './ProductReducer';
 import { getServerTime } from './ServerTimeReducer';
 import { addTopupReducer } from './PaymentReducer';
 import { getWalletReducer } from './WalletReducer';
+import { postProductReducer } from './PostProductReducer';
 
 export default combineReducers({
     auth : authReducer,
@@ -20,5 +21,6 @@ export default combineReducers({
     serverTime : getServerTime,
     topup : addTopupReducer,
     wallet: getWalletReducer,
+    postProduct : postProductReducer,
     setBidding
 });

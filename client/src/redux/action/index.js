@@ -8,3 +8,4 @@ export * from './FetchProductAction';
 export * from './ServerTimeAction';
 export * from './PaymentAction';
 export * from './WalletAction';
+export * from './PostProductAction';

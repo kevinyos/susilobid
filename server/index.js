@@ -91,7 +91,8 @@ const {
   productRouter,
   biddingRouter,
   paymentRouter,
-  walletRouter
+  walletRouter,
+  postProductRouter
 } = require('./router');
 
 app.use('/users', authRouter);
@@ -102,5 +103,6 @@ app.use('/product', productRouter);
 app.use('/bidding', biddingRouter);
 app.use('/payment', paymentRouter);
 app.use('/wallet', walletRouter);
+app.use('/seller',postProductRouter)
 
 http.listen(port, () => console.log(`API active at port ${port}`));

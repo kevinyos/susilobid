@@ -18,7 +18,8 @@ import {
   NotFound,
   ProductDetail,
   BiddingPage,
-  WalletPage
+  WalletPage,
+  AddProduct
 } from './pages';
 import Header from './components/Header';
 
@@ -63,6 +64,7 @@ const App = () => {
           <Route path='/verify' component={Verify} />
           <Route path='/product-detail' component={ProductDetail} />
           <Route path='/wallet' component={WalletPage} />
+          <Route path='/add-product' component={AddProduct} />
           <Route path='/bidding-page' component={BiddingPage} />
             {
               role === 1

@@ -6,6 +6,7 @@ import NotFound from './NotFound';
 import ProductDetail from './ProductDetail';
 import BiddingPage from './BiddingPage';
 import WalletPage from './WalletPage';
+import AddProduct from './AddProduct'
 
 export {
     Home,
@@ -15,5 +16,6 @@ export {
     NotFound,
     ProductDetail,
     BiddingPage,
-    WalletPage
+    WalletPage,
+    AddProduct
 };
