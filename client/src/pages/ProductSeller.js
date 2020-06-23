@@ -21,6 +21,8 @@ const Product = () => {
   const productPerPage = 8;
   
   const [status,setStatus] = useState('active')
+
+
   
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,7 +56,7 @@ const Product = () => {
   //   dispatch(FetchProductActive(productPerPage, offset,sellerId));
   // },[dispatch, currentPage, offset,sellerId]);
 
-  console.log(status)
+ 
 
   const renderProduct = () => {
     return getProduct.map((val, idx) => {
@@ -62,7 +64,7 @@ const Product = () => {
         <td>{val.category}</td>
         <td>{val.product_name}</td>
         <td>{val.starting_price}</td>
-        <td>{val.due_date}</td>
+        <td>{Moment(val.due_date).format('YYYY-MM-DD HH:mm:ss')}</td>
       </tr>
       
       )
@@ -74,11 +76,18 @@ const Product = () => {
       return (<tr key={idx}>
         <td>{val.category}</td>
         <td>{val.product_name}</td>
-        <td>{val.due_date}</td>
+        <td>{val.payment_to_seller}</td>
+        <td>{Moment(val.due_date).format('YYYY-MM-DD HH:mm:ss')}</td>
       </tr>
-      
       )
     });
+  };
+
+  const renderTotal = () => {
+    let total = 0
+    for(let i = 0;i<getProduct.length;i++){
+      total += getProduct[i].payment_to_seller
+    }return total
   };
 
   return (
@@ -126,6 +135,7 @@ const Product = () => {
               <tbody class="">
                 {renderProduct()}
               </tbody>
+              
             </table>
             
           </div>
@@ -144,12 +154,21 @@ const Product = () => {
                 <tr class="">
                   <th class="">Category</th>
                   <th class="">Product</th>
+                  <th class="">Received</th>
                   <th class="">Finish Date</th>
                 </tr>
               </thead>
               <tbody class="">
                 {renderFinishProduct()}
               </tbody>
+              <tfoot class="">
+                <tr class="">
+                  <td></td>
+                  <td>Total:</td>
+                  <td>{renderTotal()}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
             </table>
             
           </div>
