@@ -30,7 +30,7 @@ const ProductHome = () => {
   const getProduct = useSelector(({ product }) => product.product);
   const totalProducts = useSelector(({ product }) => product.count);
   const loading = useSelector(({ product }) => product.loading);
-
+  
   const dispatch = useDispatch();
 
   const offset = productPerPage * (currentPage - 1);

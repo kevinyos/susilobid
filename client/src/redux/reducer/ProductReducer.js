@@ -14,7 +14,10 @@ import {
     FETCH_DATA_BY_NAME,
     FETCH_DATA_BY_TIME,
     FETCH_DATA_BY_PRICE,
-    FETCH_DATA_FAILED
+    FETCH_DATA_FAILED,
+    FETCH_ACTIVE_PRODUCT_PAGE,
+    FETCH_PENDING_PRODUCT_PAGE,
+    FETCH_FINISH_PRODUCT_PAGE
 } from '../Types';
 
 const INNITIAL_STATE = {
@@ -32,6 +35,27 @@ export const fetchProduct = (state = INNITIAL_STATE, action) => {
             return {
                 ...state,
                 loading: true
+            };
+        case FETCH_ACTIVE_PRODUCT_PAGE :
+            return {
+                ...state,
+                product: [...action.payload],
+                count: action.count,
+                loading: false
+            };
+        case FETCH_PENDING_PRODUCT_PAGE :
+            return {
+                ...state,
+                product: [...action.payload],
+                count: action.count,
+                loading: false
+            };
+        case FETCH_FINISH_PRODUCT_PAGE :
+            return {
+                ...state,
+                product: [...action.payload],
+                count: action.count,
+                loading: false
             };
         case FETCH_DATA_SUCCESS :
             return {

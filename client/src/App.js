@@ -19,7 +19,8 @@ import {
   ProductDetail,
   BiddingPage,
   WalletPage,
-  AddProduct
+  AddProduct,
+  Product
 } from './pages';
 import Header from './components/Header';
 
@@ -65,6 +66,7 @@ const App = () => {
           <Route path='/product-detail' component={ProductDetail} />
           <Route path='/wallet' component={WalletPage} />
           <Route path='/add-product' component={AddProduct} />
+          <Route path='/products' component={Product} />
           <Route path='/bidding-page' component={BiddingPage} />
             {
               role === 1

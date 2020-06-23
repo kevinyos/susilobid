@@ -65,7 +65,9 @@ const Header = () => {
             <NavDropdown.Item href="#">
               <Link to='/add-product' >Add Product</Link>
             </NavDropdown.Item>
-            <NavDropdown.Item href="#">Another action</NavDropdown.Item>
+            <NavDropdown.Item href="#">
+              <Link to='/products' >Check Product</Link>
+            </NavDropdown.Item>
             <NavDropdown.Item href="#">Something</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item href="#">Separated link</NavDropdown.Item>

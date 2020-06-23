@@ -3,6 +3,9 @@ const router = express.Router();
 const { productController } = require('../controller');
 const {
     fetchProduct,
+    fetchProductActive,
+    fetchProductPending,
+    fetchProductFinish,
     fetchProductById,
     getCategory,
     fetchByCategory,
@@ -18,6 +21,9 @@ const {
 } = productController;
 
 router.get('/get-product/:limit/:offset/:orderBy', fetchProduct);
+router.get('/product-active/:limit/:offset/:sellerId', fetchProductActive);
+router.get('/product-pending/:limit/:offset/:sellerId', fetchProductPending);
+router.get('/product-finish/:limit/:offset/:sellerId', fetchProductFinish);
 router.get('/get-product/:productId', fetchProductById);
 router.get('/get-category', getCategory);
 router.post('/get-by-category/:category', fetchByCategory);
